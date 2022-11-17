@@ -76,15 +76,15 @@ int main()
     glEnableVertexAttribArray(0);
 
     float vertices[] = {
-    0.5f, 0.5f, 0.0f,   // 右上角
-    0.5f, -0.5f, 0.0f,  // 右下角
-    -0.5f, -0.5f, 0.0f, // 左下角
-    -0.5f, 0.5f, 0.0f   // 左上角
+        0.5f, 0.5f, 0.0f,   // 右上角
+        0.5f, -0.5f, 0.0f,  // 右下角
+        -0.5f, -0.5f, 0.0f, // 左下角
+        -0.5f, 0.5f, 0.0f   // 左上角
     };
 
     unsigned int indices[] = {
-        0, 1, 3, // 第一个三角形
-        1, 2, 3  // 第二个三角形
+        0, 1, 3,
+        1, 2, 3
     };
 
     unsigned int VAO, VBO, EBO;
@@ -95,13 +95,24 @@ int main()
     glBindVertexArray(VAO);
     // 2. 把我们的顶点数组复制到一个顶点缓冲中，供OpenGL使用
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);//把用户定义的数据复制到当前绑定缓冲
-    // 3. 复制我们的索引数组到一个索引缓冲中，供OpenGL使用
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
     // 3. 设置顶点属性指针
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
+
+    //注意，这是允许的，对glVertexAttribPointer的调用将VBO注册为顶点属性的绑定顶点缓冲区对象，
+    //以便之后我们可以安全地解除绑定
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    //当VAO处于活动状态时，不要解除EBO的绑定，因为绑定元素缓冲对象存储在VAO中；保持EBO绑定。
+    //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+    //您可以在之后解除绑定VAO，以便其他VAO调用不会意外修改此VAO，但这种情况很少发生。修改其他
+    //VAO无论如何都需要调用glBindVertexArray，因此我们通常不会在不直接需要时解除VAO（或VBO）的绑定。
+    glBindVertexArray(0);
 
     while (!glfwWindowShouldClose(window))
     {
@@ -111,17 +122,20 @@ int main()
         glClear(GL_COLOR_BUFFER_BIT);
         // 4. 绘制物体
         glUseProgram(shaderProgram);
+
+        //因为我们只有一个VAO，所以没有必要每次都绑定它，但我们会这样做，以使事情更有条理
         glBindVertexArray(VAO);
-        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+
+        //glDrawArrays(GL_TRIANGLES, 0, 9);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
         glBindVertexArray(0);
 
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
-    glDeleteShader(vertexShader);
-    glDeleteShader(fragmentShader);
+    glDeleteVertexArrays(1, &VAO);
+    glDeleteBuffers(1, &VBO);
     glDeleteProgram(shaderProgram);
 
     glfwTerminate();
