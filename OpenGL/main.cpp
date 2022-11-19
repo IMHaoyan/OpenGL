@@ -3,15 +3,20 @@
 #include "shader_s.h"
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
-#include <iostream>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
+#include <iostream>
+using namespace glm;
+using namespace std;
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
 
 // settings
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
-float alpha = 0.2;
+float alpha = 0.2f;
 
 int main()
 {
@@ -27,7 +32,7 @@ int main()
     GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", NULL, NULL);
     if (window == NULL)
     {
-        std::cout << "Failed to create GLFW window" << std::endl;
+        cout << "Failed to create GLFW window" << endl;
         glfwTerminate();
         return -1;
     }
@@ -38,7 +43,7 @@ int main()
     // ---------------------------------------
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
     {
-        std::cout << "Failed to initialize GLAD" << std::endl;
+        cout << "Failed to initialize GLAD" << endl;
         return -1;
     }
 
@@ -46,10 +51,10 @@ int main()
     // ------------------------------------------------------------------
     float vertices[] = {
         // positions          // colors           // texture coords
-         0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   0.55f, 0.55f, // top right
-         0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   0.55f, 0.45f, // bottom right
-        -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.45f, 0.45f, // bottom left
-        -0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.45f, 0.55f  // top left 
+         0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f, // top right
+         0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f, // bottom right
+        -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f, // bottom left
+        -0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f  // top left 
     };
     unsigned int indices[] = {
         0, 1, 3, // first triangle
@@ -104,7 +109,7 @@ int main()
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
         glGenerateMipmap(GL_TEXTURE_2D);
     }else{
-        std::cout << "Failed to load texture1" << std::endl;
+        cout << "Failed to load texture1" << endl;
     }
     stbi_image_free(data);
 
@@ -126,7 +131,7 @@ int main()
         glGenerateMipmap(GL_TEXTURE_2D);
     }
     else {
-        std::cout << "Failed to load texture2" << std::endl;
+        cout << "Failed to load texture2" << endl;
     }
     stbi_image_free(data);
 
@@ -141,6 +146,8 @@ int main()
     ourShader.setInt("texture1", 0);
     // or set it via the texture class
     ourShader.setInt("texture2", 1);
+
+    unsigned int transformLoc = glGetUniformLocation(ourShader.ID, "transform");
     // render loop
     // -----------
     while (!glfwWindowShouldClose(window))
@@ -160,12 +167,23 @@ int main()
         glActiveTexture(GL_TEXTURE1);
         glBindTexture(GL_TEXTURE_2D, texture2);
 
+        mat4 trans;
+        trans = translate(trans, vec3(0.5f, -0.5f, 0.0f));
+        trans = rotate(trans, (float)glfwGetTime(), vec3(0.0f, 0.0f, 1.0f));
+        glUniformMatrix4fv(transformLoc, 1, GL_FALSE, value_ptr(trans));
+
         ourShader.setFloat("alpha", alpha);
         // render container
         ourShader.use();
         glBindVertexArray(VAO);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
+        trans = mat4(1.0f);
+        trans = translate(trans, vec3(0.5f, 0.5f, 0.0f));
+        trans = scale(trans, vec3(fabs(sin((float)glfwGetTime()))));
+        glUniformMatrix4fv(transformLoc, 1, GL_FALSE, value_ptr(trans));
+
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
         glfwSwapBuffers(window);
@@ -192,15 +210,15 @@ void processInput(GLFWwindow* window)
         glfwSetWindowShouldClose(window, true);
 
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-        alpha += 0.005;
+        alpha += 0.005f;
         if (alpha > 1) {
-            alpha = 1.0;
+            alpha = 1.0f;
         }
     }
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-        alpha -= 0.005;
+        alpha -= 0.005f;
         if (alpha < 0) {
-            alpha = 0.0;
+            alpha = 0.0f;
         }
     }
 }
