@@ -134,15 +134,15 @@
   <ItemGroup>
     <ClCompile Include="glad.c" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="texture.cpp" />
+    <ClCompile Include="pic.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="shader_s.h" />
     <ClInclude Include="stb_image.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="shader.fs" />
-    <None Include="shader.vs" />
+    <None Include="shader.frag" />
+    <None Include="shader.vert" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="awesomeface.png" />

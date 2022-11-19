@@ -21,7 +21,7 @@
     <ClCompile Include="glad.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="texture.cpp">
+    <ClCompile Include="pic.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
@@ -34,10 +34,10 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="shader.vs">
+    <None Include="shader.vert">
       <Filter>源文件</Filter>
     </None>
-    <None Include="shader.fs">
+    <None Include="shader.frag">
       <Filter>源文件</Filter>
     </None>
   </ItemGroup>
