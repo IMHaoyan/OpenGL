@@ -255,7 +255,7 @@ int main()
             mat4 model = mat4(1.0f); // make sure to initialize matrix to identity matrix first
             model = translate(model, cubePositions[i]);
             float angle = 20.0f * i;
-            model = rotate(model, (float)glfwGetTime() + radians(angle), vec3(1.0f, 0.3f, 0.5f));
+            model = rotate(model, /*(float)glfwGetTime() +*/ radians(angle), vec3(1.0f, 0.3f, 0.5f));
             ourShader.setMat4("model", model);
 
             glDrawArrays(GL_TRIANGLES, 0, 36);
