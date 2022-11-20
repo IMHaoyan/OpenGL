@@ -1,11 +1,13 @@
 #pragma once
 #include <glad/glad.h>
-
 #include <string>
 #include <fstream>
 #include <sstream>
 #include <iostream>
-
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+using namespace glm;
 class Shader
 {
 public:
@@ -88,7 +90,10 @@ public:
     {
         glUniform1f(glGetUniformLocation(ID, name.c_str()), value);
     }
-
+    void setMat4(const std::string& name, mat4 mat) const
+    {
+        glUniformMatrix4fv(glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, value_ptr(mat));
+    }
 private:
     // utility function for checking shader compilation/linking errors.
     // ------------------------------------------------------------------------
