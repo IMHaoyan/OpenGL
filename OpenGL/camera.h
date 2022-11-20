@@ -5,20 +5,23 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #include <vector>
+#include <iostream>
 using namespace glm;
 // Defines several possible options for camera movement. Used as abstraction to stay away from window-system specific input methods
 enum Camera_Movement {
     FORWARD,
     BACKWARD,
     LEFT,
-    RIGHT
+    RIGHT,
+    UP,
+    DOWN
 };
 
 // Default camera values
 const float YAW = -90.0f;
 const float PITCH = 0.0f;
 const float SPEED = 2.5f;
-const float SENSITIVITY = 0.05f;
+const float SENSITIVITY = 0.08f;
 const float ZOOM = 45.0f;
 
 
@@ -77,7 +80,10 @@ public:
             Position -= Right * velocity;
         if (direction == RIGHT)
             Position += Right * velocity;
-        Position.y = 0.0f;
+        if (direction == UP)
+            Position += Up * velocity;
+        if (direction == DOWN)
+            Position -= Up * velocity;
     }
 
     // processes input received from a mouse input system. Expects the offset value in both the x and y direction.
@@ -101,7 +107,10 @@ public:
         // update Front, Right and Up Vectors using the updated Euler angles
         updateCameraVectors();
     }
-
+    void printPos() {
+        std::cout << Position.x<<","<< Position.y << "," << Position.z<< std::endl;
+        std::cout << Front.x << "," << Front.y << "," << Front.z << std::endl;
+    }
     // processes input received from a mouse scroll-wheel event. Only requires input on the vertical wheel-axis
     void ProcessMouseScroll(float yoffset)
     {

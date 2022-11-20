@@ -40,6 +40,9 @@
     <None Include="shader.frag">
       <Filter>源文件</Filter>
     </None>
+    <None Include="lampShader.frag">
+      <Filter>源文件</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Image Include="wall.jpg">

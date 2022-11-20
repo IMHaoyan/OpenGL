@@ -141,6 +141,7 @@
     <ClInclude Include="camera.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="lampShader.frag" />
     <None Include="shader.frag" />
     <None Include="shader.vert" />
   </ItemGroup>
