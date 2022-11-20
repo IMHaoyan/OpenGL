@@ -21,7 +21,7 @@ enum Camera_Movement {
 const float YAW = -90.0f;
 const float PITCH = 0.0f;
 const float SPEED = 2.5f;
-const float SENSITIVITY = 0.08f;
+const float SENSITIVITY = 0.05f;
 const float ZOOM = 45.0f;
 
 
@@ -108,8 +108,8 @@ public:
         updateCameraVectors();
     }
     void printPos() {
-        std::cout << Position.x<<","<< Position.y << "," << Position.z<< std::endl;
-        std::cout << Front.x << "," << Front.y << "," << Front.z << std::endl;
+        std::cout <<"\r"<< Position.x << "," << Position.y << "," << Position.z << "  " <<
+            Front.x << "," << Front.y << "," << Front.z << std::flush;
     }
     // processes input received from a mouse scroll-wheel event. Only requires input on the vertical wheel-axis
     void ProcessMouseScroll(float yoffset)
