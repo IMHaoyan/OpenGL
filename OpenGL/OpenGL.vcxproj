@@ -142,6 +142,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="lampShader.frag" />
+    <None Include="matrix.frag" />
+    <None Include="matrix.vert" />
     <None Include="shader.frag" />
     <None Include="shader.vert" />
     <None Include="shader1.frag" />
@@ -155,6 +157,7 @@
     <Image Include="container2.png" />
     <Image Include="container2_specular.png" />
     <Image Include="lighting_maps_specular_color.png" />
+    <Image Include="matrix.jpg" />
     <Image Include="wall.jpg" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

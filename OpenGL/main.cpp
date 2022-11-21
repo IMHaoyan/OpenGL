@@ -132,24 +132,42 @@ int main()
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);// 设置灯立方体的顶点属性（对我们的灯来说仅仅只有位置数据）
     glEnableVertexAttribArray(0);
 
+    unsigned int matrixVAO;
+    glGenVertexArrays(1, &matrixVAO);
+    glBindVertexArray(matrixVAO);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO); // 只需要绑定VBO不用再次设置VBO的数据，因为箱子的VBO数据中已经包含了正确的立方体顶点数据
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+    glEnableVertexAttribArray(2);
+
     // build and compile our shader zprogram
     // ------------------------------------
     Shader ourShader("shader.vert", "shader.frag");
     Shader lampShader("shader.vert", "lampShader.frag");
+    Shader matrixShader("matrix.vert", "matrix.frag");
     unsigned int diffuseMap = loadTexture("container2.png");
     unsigned int specularMap = loadTexture("container2_specular.png");
     unsigned int specularMap2 = loadTexture("lighting_maps_specular_color.png");
+    unsigned int matrixMap = loadTexture("matrix.jpg");
+
     ourShader.use();
     ourShader.setInt("material.diffuse", 0);
     ourShader.setInt("material.specular", 1);
     ourShader.setFloat("material.shininess", 0.4 * 128);
-
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, diffuseMap);
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, specularMap);
     //glBindTexture(GL_TEXTURE_2D, specularMap2);
+
+    matrixShader.use();
+    matrixShader.setInt("emit", 2);//
+    glActiveTexture(GL_TEXTURE2);
+    glBindTexture(GL_TEXTURE_2D, matrixMap);
 
     while (!glfwWindowShouldClose(window))
     {
@@ -201,6 +219,16 @@ int main()
         glBindVertexArray(lightVAO);
         glDrawArrays(GL_TRIANGLES, 0, 36);
 
+
+        matrixShader.use();
+        matrixShader.setVec3("offset",0,float(glfwGetTime()),0);
+        model = translate(mat4(), vec3(-3,0,-3));
+        model = scale(model, vec3(2.0f));
+        matrixShader.setMat4("model", model);
+        matrixShader.setMat4("view", view);
+        matrixShader.setMat4("projection", projection);
+        glBindVertexArray(matrixVAO);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
         glfwSwapBuffers(window);
