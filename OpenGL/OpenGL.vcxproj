@@ -144,6 +144,10 @@
     <None Include="lampShader.frag" />
     <None Include="shader.frag" />
     <None Include="shader.vert" />
+    <None Include="shader1.frag" />
+    <None Include="shader1.vert" />
+    <None Include="shader2.frag" />
+    <None Include="shader2.vert" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="awesomeface.png" />
