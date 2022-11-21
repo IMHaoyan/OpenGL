@@ -27,7 +27,6 @@ float lastX = SCR_WIDTH / 2.0f;
 float lastY = SCR_HEIGHT / 2.0f;
 bool firstMouse = true;
 
-
 // timing
 float deltaTime = 0.0f;	// time between current frame and last frame
 float lastFrame = 0.0f;
@@ -70,10 +69,6 @@ int main()
     // -----------------------------
     glEnable(GL_DEPTH_TEST);
 
-    // build and compile our shader zprogram
-    // ------------------------------------
-    Shader ourShader("shader.vert", "shader.frag");
-    Shader lampShader("shader.vert", "lampShader.frag");
     // set up vertex data (and buffer(s)) and configure vertex attributes
     // ------------------------------------------------------------------
     float vertices[] = {
@@ -137,6 +132,11 @@ int main()
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);// 设置灯立方体的顶点属性（对我们的灯来说仅仅只有位置数据）
     glEnableVertexAttribArray(0);
 
+    // build and compile our shader zprogram
+    // ------------------------------------
+    Shader ourShader("shader.vert", "shader.frag");
+    Shader lampShader("shader.vert", "lampShader.frag");
+
     // be sure to activate shader when setting uniforms/drawing objects
     ourShader.use();
     ourShader.setVec3("objectColor", vec3(1.0f, 0.5f, 0.31f));
@@ -164,7 +164,8 @@ int main()
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         ourShader.use();
-        vec3 lightPos = vec3(3.0f * sin(float(glfwGetTime())), 3.0f , 3.0f * cos(float(glfwGetTime())));
+        vec3 lightPos = vec3(2.0f ,2.0f, 2.0f);
+        //vec3 lightPos = vec3(2.0f * sin(float(glfwGetTime())), 2.0f , 2.0f * cos(float(glfwGetTime())));
         ourShader.setVec3("lightPos", lightPos);
 
         ourShader.use();
