@@ -30,9 +30,10 @@ bool firstMouse = true;
 // timing
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
-float cutEngle = 12.5f;
+float outCutEngle = 12.5f;
+float cutEngle = outCutEngle/3.0f;
 float speed = 0.2f;
-float intensity = 0.0f;
+float intensity = 5.0f;
 int main()
 {
     // glfw: initialize and configure
@@ -205,6 +206,7 @@ int main()
         ourShader.setVec3("light.position", camera.Position);
         ourShader.setVec3("light.direction", camera.Front);
         ourShader.setFloat("light.cutOff", cos(radians(cutEngle)));
+        ourShader.setFloat("light.outerCutOff", cos(radians(outCutEngle)));
         cout << cutEngle << endl;
         ourShader.setFloat("light.constant", 1.0f);
         ourShader.setFloat("light.linear", 0.09f);
@@ -288,10 +290,21 @@ void processInput(GLFWwindow* window)
         camera.ProcessKeyboard(UP, deltaTime);
     if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
         camera.ProcessKeyboard(DOWN, deltaTime);
-    if (glfwGetKey(window, GLFW_KEY_T) == GLFW_PRESS)
+    if (glfwGetKey(window, GLFW_KEY_T) == GLFW_PRESS) {
         cutEngle += 1.0f * speed;
-    if (glfwGetKey(window, GLFW_KEY_Y) == GLFW_PRESS)
+        if (cutEngle > outCutEngle) cutEngle = outCutEngle;
+    }
+    if (glfwGetKey(window, GLFW_KEY_Y) == GLFW_PRESS) {
         cutEngle -= 1.0f * speed;
+        if (cutEngle < 0) cutEngle = 0;
+    }
+    if (glfwGetKey(window, GLFW_KEY_G) == GLFW_PRESS) {
+        outCutEngle += 1.0f * speed;
+    }
+    if (glfwGetKey(window, GLFW_KEY_H) == GLFW_PRESS) {
+        outCutEngle -= 1.0f * speed;
+        if (outCutEngle < cutEngle) outCutEngle = cutEngle;
+    }
     if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS)
         intensity = intensity == 5.0f ? 0.0f : 5.0f;
 }

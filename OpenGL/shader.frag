@@ -9,7 +9,7 @@ struct Light {
     vec3 position;
     vec3 direction;
     float cutOff;
-
+    float outerCutOff;
     float constant;
     float linear;
     float quadratic;
@@ -41,7 +41,7 @@ void main()
 
     vec3 ambient = light.ambient * vec3(texture(material.diffuse, TexCoords));
 
-    float strength = max((theta - light.cutOff)/(1.0f-light.cutOff),0.0f);
+    float strength = clamp((theta - light.outerCutOff)/(light.cutOff - light.outerCutOff),0.0f,1.0f);
     
     float diff = max(dot(norm, lightDir), 0.0f);
     vec3 diffuse = diff * light.diffuse * vec3(texture(material.diffuse, TexCoords));
