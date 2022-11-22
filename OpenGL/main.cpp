@@ -111,6 +111,18 @@ int main()
         -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  0.0f, 0.0f,
         -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f, 1.0f
     };
+    vec3 cubePositions[] = {
+        vec3(0.0f,  0.0f,  0.0f),
+        vec3(2.0f,  5.0f, -15.0f),
+        vec3(-1.5f, -2.2f, -2.5f),
+        vec3(-3.8f, -2.0f, -12.3f),
+        vec3(2.4f, -0.4f, -3.5f),
+        vec3(-1.7f,  3.0f, -7.5f),
+        vec3(1.3f, -2.0f, -2.5f),
+        vec3(1.5f,  2.0f, -2.5f),
+        vec3(1.5f,  0.2f, -1.5f),
+        vec3(-1.3f,  1.0f, -1.5f)
+    };
     
     unsigned int VBO, VAO;
     glGenVertexArrays(1, &VAO);
@@ -187,16 +199,14 @@ int main()
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         ourShader.use();
-
         //vec3 lightPos = vec3(2.0f, 2.0f, 2.0f);
-        vec3 lightPos = vec3(1.0f * sin(2*float(glfwGetTime())), 1.0f, 1.0f * cos(2*float(glfwGetTime())));
-        ourShader.setVec3("light.position", lightPos);
-        vec3 lightColor(1.0f, 1.0f, 1.0f);
-        vec3 diffuseColor = lightColor * vec3(0.99f); // 降低影响
-        vec3 ambientColor = lightColor * vec3(0.5f); // 很低的影响
-        ourShader.setVec3("light.ambient", ambientColor);
-        ourShader.setVec3("light.diffuse", diffuseColor);
-        ourShader.setVec3("light.specular", vec3(1.0f, 1.0f, 1.0f));
+        vec3 lightPos = -3.0f*vec3(-0.2f, -1.0f, -0.3f);
+        vec3 lightDir = vec3(-0.2f, -1.0f, -0.3f);
+        ourShader.setVec3("light.direction", lightDir);
+        vec3 lightColor(1.0f);
+        ourShader.setVec3("light.ambient", lightColor* vec3(0.2f));
+        ourShader.setVec3("light.diffuse", lightColor* vec3(0.8f));
+        ourShader.setVec3("light.specular", lightColor);
 
         ourShader.setVec3("viewPos", camera.Position);
         mat4 model = mat4();
@@ -207,10 +217,18 @@ int main()
         ourShader.setMat4("projection", projection);
 
         glBindVertexArray(VAO);
-        glDrawArrays(GL_TRIANGLES, 0, 36);
+        for (unsigned int i = 0; i < 10; i++) {
+            mat4 model;
+            model = translate(model, cubePositions[i]);
+            float angle = 20.0f * i;
+            model = rotate(model, radians(angle), vec3(1.0f, 0.3f, 0.5f));
+            ourShader.setMat4("model", model);
+
+            glDrawArrays(GL_TRIANGLES, 0, 36);
+        }
 
         lampShader.use();
-        lampShader.setVec3("lightEmit", ambientColor * 10.0f);
+        lampShader.setVec3("lightEmit", lightColor * 10.0f);
         model = translate(mat4(), lightPos);
         model = scale(model, vec3(0.2f));
         lampShader.setMat4("model", model);
@@ -218,8 +236,7 @@ int main()
         lampShader.setMat4("projection", projection);
         glBindVertexArray(lightVAO);
         glDrawArrays(GL_TRIANGLES, 0, 36);
-
-
+        
         matrixShader.use();
         matrixShader.setVec3("offset",0,float(glfwGetTime()),0);
         model = translate(mat4(), vec3(-3,0,-3));
