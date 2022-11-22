@@ -199,10 +199,11 @@ int main()
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         ourShader.use();
-        //vec3 lightPos = vec3(2.0f, 2.0f, 2.0f);
-        vec3 lightPos = -3.0f*vec3(-0.2f, -1.0f, -0.3f);
-        vec3 lightDir = vec3(-0.2f, -1.0f, -0.3f);
-        ourShader.setVec3("light.direction", lightDir);
+        vec3 lightPos(1.2f, 1.0f, 2.0f);
+        ourShader.setVec3("light.position", lightPos);
+        ourShader.setFloat("light.constant", 1.0f);
+        ourShader.setFloat("light.linear", 0.09f);
+        ourShader.setFloat("light.quadratic", 0.032f);
         vec3 lightColor(1.0f);
         ourShader.setVec3("light.ambient", lightColor* vec3(0.2f));
         ourShader.setVec3("light.diffuse", lightColor* vec3(0.8f));
