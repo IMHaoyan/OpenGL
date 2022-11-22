@@ -30,7 +30,9 @@ bool firstMouse = true;
 // timing
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
-
+float cutEngle = 12.5f;
+float speed = 0.2f;
+float intensity = 0.0f;
 int main()
 {
     // glfw: initialize and configure
@@ -199,15 +201,18 @@ int main()
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         ourShader.use();
-        vec3 lightPos(1.2f, 1.0f, 2.0f);
-        ourShader.setVec3("light.position", lightPos);
+        vec3 lightPos(1.2f, 1.0f, 2.0f); 
+        ourShader.setVec3("light.position", camera.Position);
+        ourShader.setVec3("light.direction", camera.Front);
+        ourShader.setFloat("light.cutOff", cos(radians(cutEngle)));
+        cout << cutEngle << endl;
         ourShader.setFloat("light.constant", 1.0f);
         ourShader.setFloat("light.linear", 0.09f);
         ourShader.setFloat("light.quadratic", 0.032f);
         vec3 lightColor(1.0f);
-        ourShader.setVec3("light.ambient", lightColor* vec3(0.2f));
-        ourShader.setVec3("light.diffuse", lightColor* vec3(0.8f));
-        ourShader.setVec3("light.specular", lightColor);
+        ourShader.setVec3("light.ambient", lightColor* vec3(0.2f)*intensity);
+        ourShader.setVec3("light.diffuse", lightColor* vec3(0.8f)* intensity);
+        ourShader.setVec3("light.specular", lightColor * intensity);
 
         ourShader.setVec3("viewPos", camera.Position);
         mat4 model = mat4();
@@ -283,6 +288,12 @@ void processInput(GLFWwindow* window)
         camera.ProcessKeyboard(UP, deltaTime);
     if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
         camera.ProcessKeyboard(DOWN, deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_T) == GLFW_PRESS)
+        cutEngle += 1.0f * speed;
+    if (glfwGetKey(window, GLFW_KEY_Y) == GLFW_PRESS)
+        cutEngle -= 1.0f * speed;
+    if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS)
+        intensity = intensity == 5.0f ? 0.0f : 5.0f;
 }
 
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes
