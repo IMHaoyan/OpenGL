@@ -21,9 +21,12 @@
     <ClCompile Include="glad.c">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="mesh.h">
+      <Filter>头文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="shader_s.h">
+    <ClInclude Include="shader.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="stb_image.h">
@@ -32,57 +35,16 @@
     <ClInclude Include="camera.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="model.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="shader.vert">
+    <None Include="1.model_loading.vs">
       <Filter>源文件</Filter>
     </None>
-    <None Include="shader.frag">
+    <None Include="1.model_loading.fs">
       <Filter>源文件</Filter>
     </None>
-    <None Include="lampShader.frag">
-      <Filter>源文件</Filter>
-    </None>
-    <None Include="shader1.frag">
-      <Filter>源文件</Filter>
-    </None>
-    <None Include="shader1.vert">
-      <Filter>源文件</Filter>
-    </None>
-    <None Include="shader2.vert">
-      <Filter>源文件</Filter>
-    </None>
-    <None Include="shader2.frag">
-      <Filter>源文件</Filter>
-    </None>
-    <None Include="matrix.frag">
-      <Filter>源文件</Filter>
-    </None>
-    <None Include="matrix.vert">
-      <Filter>源文件</Filter>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="wall.jpg">
-      <Filter>资源文件</Filter>
-    </Image>
-    <Image Include="container.jpg">
-      <Filter>资源文件</Filter>
-    </Image>
-    <Image Include="container2.png">
-      <Filter>资源文件</Filter>
-    </Image>
-    <Image Include="awesomeface.png">
-      <Filter>资源文件</Filter>
-    </Image>
-    <Image Include="container2_specular.png">
-      <Filter>资源文件</Filter>
-    </Image>
-    <Image Include="lighting_maps_specular_color.png">
-      <Filter>资源文件</Filter>
-    </Image>
-    <Image Include="matrix.jpg">
-      <Filter>资源文件</Filter>
-    </Image>
   </ItemGroup>
 </Project>
