@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="shader">
+      <UniqueIdentifier>{232431d5-496d-40d2-b450-bb83f3937e38}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -40,11 +43,25 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="1.model_loading.vs">
-      <Filter>源文件</Filter>
+    <None Include="5.1.framebuffers.vs">
+      <Filter>shader</Filter>
     </None>
-    <None Include="1.model_loading.fs">
-      <Filter>源文件</Filter>
+    <None Include="5.1.framebuffers.fs">
+      <Filter>shader</Filter>
     </None>
+    <None Include="5.1.framebuffers_screen.vs">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="5.1.framebuffers_screen.fs">
+      <Filter>shader</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="container.jpg">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="metal.png">
+      <Filter>资源文件</Filter>
+    </Image>
   </ItemGroup>
 </Project>
