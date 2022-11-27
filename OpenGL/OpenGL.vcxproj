@@ -147,10 +147,21 @@
     <None Include="5.1.framebuffers.vs" />
     <None Include="5.1.framebuffers_screen.fs" />
     <None Include="5.1.framebuffers_screen.vs" />
+    <None Include="reflect.frag" />
+    <None Include="reflect.vert" />
+    <None Include="refract.frag" />
+    <None Include="skyBox.frag" />
+    <None Include="skyBox.vert" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="container.jpg" />
     <Image Include="metal.png" />
+    <Image Include="skybox\back.jpg" />
+    <Image Include="skybox\bottom.jpg" />
+    <Image Include="skybox\front.jpg" />
+    <Image Include="skybox\left.jpg" />
+    <Image Include="skybox\right.jpg" />
+    <Image Include="skybox\top.jpg" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
