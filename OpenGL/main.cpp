@@ -186,7 +186,7 @@ int main()
     glGenBuffers(1, &cubeVBO);
     glBindVertexArray(cubeVAO);
     glBindBuffer(GL_ARRAY_BUFFER, cubeVBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), &vertices, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), &vertices, GL_STATIC_DRAW);//填充缓冲对象所管理的内存
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(1);
@@ -237,7 +237,7 @@ int main()
     unsigned int cubemapTexture = loadCubemap(faces);
 
     stbi_set_flip_vertically_on_load(true);
-    Model ourModel("D:/OpenGL/OpenGL/OpenGL/nanosuit_reflection/nanosuit.obj");
+    //Model ourModel("D:/OpenGL/OpenGL/OpenGL/nanosuit_reflection/nanosuit.obj");
     shader.use();
     shader.setInt("texture1", 0);
     screenShader.use();
@@ -272,6 +272,19 @@ int main()
     // draw as wireframe
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
+    unsigned int uniformBlockIndexbox = glGetUniformBlockIndex(boxShader.ID, "Matrices");
+    unsigned int uniformBlockIndexrefract = glGetUniformBlockIndex(refractShader.ID, "Matrices");
+    glUniformBlockBinding(boxShader.ID, uniformBlockIndexbox, 0);
+    glUniformBlockBinding(refractShader.ID, uniformBlockIndexrefract, 0);
+
+    unsigned int uboMatrices;
+    glGenBuffers(1, &uboMatrices);
+    glBindBuffer(GL_UNIFORM_BUFFER, uboMatrices);
+    glBufferData(GL_UNIFORM_BUFFER, 2 * sizeof(mat4), NULL, GL_STATIC_DRAW);
+    glBindBuffer(GL_UNIFORM_BUFFER, 0);
+    glBindBufferRange(GL_UNIFORM_BUFFER, 0, uboMatrices, 0, 2 * sizeof(mat4));
+
+    glEnable(GL_PROGRAM_POINT_SIZE);
     // render loop
     // -----------
     while (!glfwWindowShouldClose(window))
@@ -293,10 +306,15 @@ int main()
         mat4 view = camera.GetViewMatrix();
         mat4 projection = perspective(radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
         
+        glBindBuffer(GL_UNIFORM_BUFFER, uboMatrices);
+        glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(mat4), value_ptr(projection));
+        glBufferSubData(GL_UNIFORM_BUFFER, sizeof(mat4), sizeof(mat4), value_ptr(view));
+        glBindBuffer(GL_UNIFORM_BUFFER, 0);
+
         //CUBE 1
         boxShader.use();
-        boxShader.setMat4("view", view);
-        boxShader.setMat4("projection", projection);
+        //boxShader.setMat4("view", view);
+        //boxShader.setMat4("projection", projection);
         boxShader.setVec3("cameraPos", camera.Position);
         glBindVertexArray(cubeVAO);
         glActiveTexture(GL_TEXTURE0);
@@ -308,12 +326,12 @@ int main()
         model = translate(model, vec3(0.0f, 0.5f, 0.0f));
         model = scale(model, vec3(0.1, 0.1, 0.1));
         boxShader.setMat4("model", model);
-        ourModel.Draw(boxShader);
+        //ourModel.Draw(boxShader);
 
         //CUBE 2
         refractShader.use();
-        refractShader.setMat4("view", view);
-        refractShader.setMat4("projection", projection);
+        //refractShader.setMat4("view", view);
+        //refractShader.setMat4("projection", projection);
         refractShader.setVec3("cameraPos", camera.Position);
         refractShader.setMat4("model", model);
         glBindVertexArray(cubeVAO);
@@ -326,9 +344,7 @@ int main()
         model = translate(model, vec3(0.0f, 0.5f, 0.0f));
         model = scale(model, vec3(0.1, 0.1, 0.1));
         refractShader.setMat4("model", model);
-        ourModel.Draw(refractShader);
-        
-     
+        //ourModel.Draw(refractShader);
         
         // floor
         shader.use();

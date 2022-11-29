@@ -70,6 +70,9 @@
     <None Include="refract.frag">
       <Filter>shader</Filter>
     </None>
+    <None Include="model.frag">
+      <Filter>shader</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Image Include="container.jpg">

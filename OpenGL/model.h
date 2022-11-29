@@ -21,7 +21,7 @@
 #include <map>
 #include <vector>
 using namespace std;
-
+using namespace Assimp;
 unsigned int TextureFromFile(const char* path, const string& directory, bool gamma = false);
 
 class Model
@@ -51,7 +51,7 @@ private:
     void loadModel(string const& path)
     {
         // read file via ASSIMP
-        Assimp::Importer importer;
+        Importer importer;
         const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
         // check for errors
         if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) // if is Not Zero
@@ -159,12 +159,14 @@ private:
         vector<Texture> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
         textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
         // 3. normal maps
-        std::vector<Texture> normalMaps = loadMaterialTextures(material, aiTextureType_HEIGHT, "texture_normal");
+        vector<Texture> normalMaps = loadMaterialTextures(material, aiTextureType_HEIGHT, "texture_normal");
         textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
         // 4. height maps
-        std::vector<Texture> heightMaps = loadMaterialTextures(material, aiTextureType_AMBIENT, "texture_height");
+        vector<Texture> heightMaps = loadMaterialTextures(material, aiTextureType_AMBIENT, "texture_height");
         textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
-
+        
+        /*vector<Texture> reflectionTexture = loadMaterialTextures(material, aiTextureType_AMBIENT, "texture_reflection");
+        textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());*/
         // return a mesh object created from the extracted mesh data
         return Mesh(vertices, indices, textures);
     }
