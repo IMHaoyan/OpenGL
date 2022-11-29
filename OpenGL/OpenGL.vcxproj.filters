@@ -73,6 +73,15 @@
     <None Include="model.frag">
       <Filter>shader</Filter>
     </None>
+    <None Include="shader.vert">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="shader.frag">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="shader.glsl">
+      <Filter>shader</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Image Include="container.jpg">

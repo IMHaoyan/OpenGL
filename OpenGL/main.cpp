@@ -72,6 +72,8 @@ int main()
     Shader refractShader("reflect.vert", "refract.frag");
     Shader screenShader("5.1.framebuffers_screen.vs", "5.1.framebuffers_screen.fs");
     Shader skyboxShader("skyBox.vert", "skyBox.frag");
+    Shader pointsShader("shader.vert", "shader.frag", "shader.glsl");
+
     float vertices[] = {
     -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
      0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
@@ -180,6 +182,12 @@ int main()
         -1.0f, -1.0f,  1.0f,
          1.0f, -1.0f,  1.0f
     };
+    float points[] = {
+        -0.5f,  0.5f, 1.0f, 0.0f, 0.0f, // 左上
+         0.5f,  0.5f, 0.0f, 1.0f, 0.0f, // 右上
+         0.5f, -0.5f, 0.0f, 0.0f, 1.0f, // 右下
+        -0.5f, -0.5f, 1.0f, 1.0f, 0.0f  // 左下
+    };
     // cube VAO
     unsigned int cubeVAO, cubeVBO;
     glGenVertexArrays(1, &cubeVAO);
@@ -222,6 +230,18 @@ int main()
     glBufferData(GL_ARRAY_BUFFER, sizeof(skyboxVertices), &skyboxVertices, GL_STATIC_DRAW);
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    //points
+    unsigned int VAO, VBO;
+    glGenVertexArrays(1, &VAO);
+    glGenBuffers(1, &VBO);
+    glBindVertexArray(VAO);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(points), &points, GL_STATIC_DRAW);//填充缓冲对象所管理的内存
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), 0);
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(2 * sizeof(float)));
+    glBindVertexArray(0);
 
     unsigned int cubeTexture = loadTexture("container.jpg");
     unsigned int floorTexture = loadTexture("metal.png");
@@ -311,17 +331,19 @@ int main()
         glBufferSubData(GL_UNIFORM_BUFFER, sizeof(mat4), sizeof(mat4), value_ptr(view));
         glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
+        pointsShader.use();
+        glBindVertexArray(VAO);
+        glDrawArrays(GL_POINTS, 0, 4);
+
         //CUBE 1
         boxShader.use();
-        //boxShader.setMat4("view", view);
-        //boxShader.setMat4("projection", projection);
         boxShader.setVec3("cameraPos", camera.Position);
         glBindVertexArray(cubeVAO);
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
         model = translate(model, vec3(-1.0f, 0.0f, 0.0f));
         boxShader.setMat4("model", model);
-        glDrawArrays(GL_TRIANGLES, 0, 36);
+        //glDrawArrays(GL_TRIANGLES, 0, 36);
 
         model = translate(model, vec3(0.0f, 0.5f, 0.0f));
         model = scale(model, vec3(0.1, 0.1, 0.1));
@@ -330,8 +352,6 @@ int main()
 
         //CUBE 2
         refractShader.use();
-        //refractShader.setMat4("view", view);
-        //refractShader.setMat4("projection", projection);
         refractShader.setVec3("cameraPos", camera.Position);
         refractShader.setMat4("model", model);
         glBindVertexArray(cubeVAO);
@@ -339,7 +359,7 @@ int main()
         glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
         model = translate(mat4(1.0f), vec3(0.5f, 0.0f, 0.0f));
         refractShader.setMat4("model", model);
-        glDrawArrays(GL_TRIANGLES, 0, 36);
+        //glDrawArrays(GL_TRIANGLES, 0, 36);
 
         model = translate(model, vec3(0.0f, 0.5f, 0.0f));
         model = scale(model, vec3(0.1, 0.1, 0.1));
@@ -363,7 +383,7 @@ int main()
         skyboxShader.setMat4("projection", projection);
         glBindVertexArray(skyboxVAO);
         glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
-        glDrawArrays(GL_TRIANGLES, 0, 36);
+        //glDrawArrays(GL_TRIANGLES, 0, 36);
         glBindVertexArray(0);
         glDepthFunc(GL_LESS);
 

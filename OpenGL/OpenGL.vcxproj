@@ -151,6 +151,11 @@
     <None Include="reflect.frag" />
     <None Include="reflect.vert" />
     <None Include="refract.frag" />
+    <None Include="shader.frag" />
+    <None Include="shader.glsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="shader.vert" />
     <None Include="skyBox.frag" />
     <None Include="skyBox.vert" />
   </ItemGroup>
