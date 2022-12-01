@@ -72,7 +72,8 @@ int main()
     Shader refractShader("reflect.vert", "refract.frag");
     Shader screenShader("5.1.framebuffers_screen.vs", "5.1.framebuffers_screen.fs");
     Shader skyboxShader("skyBox.vert", "skyBox.frag");
-    Shader pointsShader("shader.vert", "shader.frag", "shader.glsl");
+    //Shader pointsShader("shader.vert", "shader.frag", "shader.glsl");
+    Shader exShader("9.2.geometry_shader.vert", "9.2.geometry_shader.frag", "shader.glsl");
 
     float vertices[] = {
     -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
@@ -326,11 +327,11 @@ int main()
         mat4 view = camera.GetViewMatrix();
         mat4 projection = perspective(radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
         
-        /*glBindBuffer(GL_UNIFORM_BUFFER, uboMatrices);
+        glBindBuffer(GL_UNIFORM_BUFFER, uboMatrices);
         glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(mat4), value_ptr(projection));
         glBufferSubData(GL_UNIFORM_BUFFER, sizeof(mat4), sizeof(mat4), value_ptr(view));
         glBindBuffer(GL_UNIFORM_BUFFER, 0);
-        pointsShader.use();
+        /*pointsShader.use();
         glBindVertexArray(VAO);
         glDrawArrays(GL_POINTS, 0, 4);*/
 
@@ -343,7 +344,6 @@ int main()
         model = translate(model, vec3(-1.0f, 0.0f, 0.0f));
         boxShader.setMat4("model", model);
         glDrawArrays(GL_TRIANGLES, 0, 36);
-
         model = translate(model, vec3(0.0f, 0.5f, 0.0f));
         model = scale(model, vec3(0.1, 0.1, 0.1));
         boxShader.setMat4("model", model);
@@ -364,6 +364,10 @@ int main()
         model = scale(model, vec3(0.1, 0.1, 0.1));
         refractShader.setMat4("model", model);
         ourModel.Draw(refractShader);
+
+        exShader.use();
+        exShader.setMat4("model", model);
+        ourModel.Draw(exShader);
         
         // floor
         shader.use();
