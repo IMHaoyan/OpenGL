@@ -257,7 +257,7 @@ int main()
     unsigned int cubemapTexture = loadCubemap(faces);
 
     stbi_set_flip_vertically_on_load(true);
-    //Model ourModel("D:/OpenGL/OpenGL/OpenGL/nanosuit_reflection/nanosuit.obj");
+    Model ourModel("D:/OpenGL/OpenGL/OpenGL/nanosuit_reflection/nanosuit.obj");
     shader.use();
     shader.setInt("texture1", 0);
     screenShader.use();
@@ -326,14 +326,13 @@ int main()
         mat4 view = camera.GetViewMatrix();
         mat4 projection = perspective(radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
         
-        glBindBuffer(GL_UNIFORM_BUFFER, uboMatrices);
+        /*glBindBuffer(GL_UNIFORM_BUFFER, uboMatrices);
         glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(mat4), value_ptr(projection));
         glBufferSubData(GL_UNIFORM_BUFFER, sizeof(mat4), sizeof(mat4), value_ptr(view));
         glBindBuffer(GL_UNIFORM_BUFFER, 0);
-
         pointsShader.use();
         glBindVertexArray(VAO);
-        glDrawArrays(GL_POINTS, 0, 4);
+        glDrawArrays(GL_POINTS, 0, 4);*/
 
         //CUBE 1
         boxShader.use();
@@ -343,12 +342,12 @@ int main()
         glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
         model = translate(model, vec3(-1.0f, 0.0f, 0.0f));
         boxShader.setMat4("model", model);
-        //glDrawArrays(GL_TRIANGLES, 0, 36);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
 
         model = translate(model, vec3(0.0f, 0.5f, 0.0f));
         model = scale(model, vec3(0.1, 0.1, 0.1));
         boxShader.setMat4("model", model);
-        //ourModel.Draw(boxShader);
+        ourModel.Draw(boxShader);
 
         //CUBE 2
         refractShader.use();
@@ -359,12 +358,12 @@ int main()
         glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
         model = translate(mat4(1.0f), vec3(0.5f, 0.0f, 0.0f));
         refractShader.setMat4("model", model);
-        //glDrawArrays(GL_TRIANGLES, 0, 36);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
 
         model = translate(model, vec3(0.0f, 0.5f, 0.0f));
         model = scale(model, vec3(0.1, 0.1, 0.1));
         refractShader.setMat4("model", model);
-        //ourModel.Draw(refractShader);
+        ourModel.Draw(refractShader);
         
         // floor
         shader.use();
@@ -373,7 +372,7 @@ int main()
         glBindVertexArray(planeVAO);
         glBindTexture(GL_TEXTURE_2D, floorTexture);
         shader.setMat4("model", mat4(1.0f));
-        //glDrawArrays(GL_TRIANGLES, 0, 6);
+        glDrawArrays(GL_TRIANGLES, 0, 6);
         glBindVertexArray(0);
 
         //skybox
@@ -383,7 +382,7 @@ int main()
         skyboxShader.setMat4("projection", projection);
         glBindVertexArray(skyboxVAO);
         glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
-        //glDrawArrays(GL_TRIANGLES, 0, 36);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
         glBindVertexArray(0);
         glDepthFunc(GL_LESS);
 
