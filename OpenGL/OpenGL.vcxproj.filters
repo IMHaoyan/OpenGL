@@ -88,6 +88,21 @@
     <None Include="9.2.geometry_shader.frag">
       <Filter>shader</Filter>
     </None>
+    <None Include="instance.vert">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="instance.frag">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="10.2.instancing.vert">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="10.2.instancing.frag">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="instancing.vert">
+      <Filter>shader</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Image Include="container.jpg">
