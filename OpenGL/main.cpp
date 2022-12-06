@@ -41,7 +41,7 @@ int main()
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
+    glfwWindowHint(GLFW_SAMPLES, 4);
     // glfw window creation
     // --------------------
     GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Haoyan's Test", NULL, NULL);
@@ -65,113 +65,95 @@ int main()
         return -1;
     }
 
-    Shader shader0("instancing.vert", "10.2.instancing.frag");
-    Shader shader("10.2.instancing.vert", "10.2.instancing.frag");
+    // Set the object data (buffers, vertex attributes)
+    GLfloat cubeVertices[] = {
+        // Positions       
+        -0.5f, -0.5f, -0.5f,
+         0.5f, -0.5f, -0.5f,
+         0.5f,  0.5f, -0.5f,
+         0.5f,  0.5f, -0.5f,
+        -0.5f,  0.5f, -0.5f,
+        -0.5f, -0.5f, -0.5f,
 
-    Model rock("D:/OpenGL/OpenGL/OpenGL/rock/rock.obj");
-    Model planet("D:/OpenGL/OpenGL/OpenGL/planet/planet.obj");
+        -0.5f, -0.5f,  0.5f,
+         0.5f, -0.5f,  0.5f,
+         0.5f,  0.5f,  0.5f,
+         0.5f,  0.5f,  0.5f,
+        -0.5f,  0.5f,  0.5f,
+        -0.5f, -0.5f,  0.5f,
 
-    unsigned int amount = 200000;
-    mat4* modelMatrices = new mat4[amount];
-    srand(glfwGetTime()); // 初始化随机种子    
-    float radius = 150.0;
-    float offset = 25.0f;
-    for (unsigned int i = 0; i < amount; i++)
-    {
-        mat4 model;
-        // 1. 位移：分布在半径为 'radius' 的圆形上，偏移的范围是 [-offset, offset]
-        float angle = (float)i / (float)amount * 360.0f;
-        float displacement = (rand() % (int)(2 * offset * 100)) / 100.0f - offset;
-        float x = sin(angle) * radius + displacement;
-        displacement = (rand() % (int)(2 * offset * 100)) / 100.0f - offset;
-        float y = displacement * 0.4f; // 让行星带的高度比x和z的宽度要小
-        displacement = (rand() % (int)(2 * offset * 100)) / 100.0f - offset;
-        float z = cos(angle) * radius + displacement;
-        model = translate(model, vec3(x, y, z));
+        -0.5f,  0.5f,  0.5f,
+        -0.5f,  0.5f, -0.5f,
+        -0.5f, -0.5f, -0.5f,
+        -0.5f, -0.5f, -0.5f,
+        -0.5f, -0.5f,  0.5f,
+        -0.5f,  0.5f,  0.5f,
 
-        // 2. 缩放：在 0.05 和 0.25f 之间缩放
-        float scale1 = (rand() % 20) / 100.0f + 0.05;
-        model = scale(model, vec3(scale1));
+         0.5f,  0.5f,  0.5f,
+         0.5f,  0.5f, -0.5f,
+         0.5f, -0.5f, -0.5f,
+         0.5f, -0.5f, -0.5f,
+         0.5f, -0.5f,  0.5f,
+         0.5f,  0.5f,  0.5f,
 
-        // 3. 旋转：绕着一个（半）随机选择的旋转轴向量进行随机的旋转
-        float rotAngle = (rand() % 360);
-        model = rotate(model, rotAngle, vec3(0.4f, 0.6f, 0.8f));
+        -0.5f, -0.5f, -0.5f,
+         0.5f, -0.5f, -0.5f,
+         0.5f, -0.5f,  0.5f,
+         0.5f, -0.5f,  0.5f,
+        -0.5f, -0.5f,  0.5f,
+        -0.5f, -0.5f, -0.5f,
 
-        // 4. 添加到矩阵的数组中
-        modelMatrices[i] = model;
-    }
+        -0.5f,  0.5f, -0.5f,
+         0.5f,  0.5f, -0.5f,
+         0.5f,  0.5f,  0.5f,
+         0.5f,  0.5f,  0.5f,
+        -0.5f,  0.5f,  0.5f,
+        -0.5f,  0.5f, -0.5f
+    };
 
-    // 顶点缓冲对象
-    unsigned int buffer;
-    glGenBuffers(1, &buffer);
-    glBindBuffer(GL_ARRAY_BUFFER, buffer);
-    glBufferData(GL_ARRAY_BUFFER, amount * sizeof(mat4), &modelMatrices[0], GL_STATIC_DRAW);
+    // Setup cube VAO
+    GLuint cubeVAO, cubeVBO;
+    glGenVertexArrays(1, &cubeVAO);
+    glGenBuffers(1, &cubeVBO);
+    glBindVertexArray(cubeVAO);
+    glBindBuffer(GL_ARRAY_BUFFER, cubeVBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(cubeVertices), &cubeVertices, GL_STATIC_DRAW);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
+    glBindVertexArray(0);
 
-    for (unsigned int i = 0; i < rock.meshes.size(); i++)
-    {
-        unsigned int VAO = rock.meshes[i].VAO;
-        glBindVertexArray(VAO);
-        // 顶点属性
-        GLsizei vec4Size = sizeof(vec4);
-        glEnableVertexAttribArray(3);
-        glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, 4 * vec4Size, (void*)0);
-        glEnableVertexAttribArray(4);
-        glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, 4 * vec4Size, (void*)(vec4Size));
-        glEnableVertexAttribArray(5);
-        glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, 4 * vec4Size, (void*)(2 * vec4Size));
-        glEnableVertexAttribArray(6);
-        glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, 4 * vec4Size, (void*)(3 * vec4Size));
-
-        glVertexAttribDivisor(3, 1);
-        glVertexAttribDivisor(4, 1);
-        glVertexAttribDivisor(5, 1);
-        glVertexAttribDivisor(6, 1);
-
-        glBindVertexArray(0);
-    }
-
-    // render loop
-    // -----------
+    // Setup OpenGL options
+    glEnable(GL_MULTISAMPLE); // Enabled by default on some drivers, but not all so always enable to make sure
     glEnable(GL_DEPTH_TEST);
+
+    // Setup and compile our shaders
+    Shader shader("advanced.vert", "advanced.frag");
+
+#pragma endregion
+    // Game loop
     while (!glfwWindowShouldClose(window))
     {
-        float currentFrame = static_cast<float>(glfwGetTime());
+        // Set frame time
+        GLfloat currentFrame = glfwGetTime();
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
         processInput(window);
 
+        shader.use();
+        mat4 model(1.0f);
+        mat4 projection = perspective(radians(45.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 1000.0f);
+        mat4 view = camera.GetViewMatrix();;
+        shader.setMat4("model", model); 
+        shader.setMat4("projection", projection);
+        shader.setMat4("view", view);
+        
+        // Clear buffers
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        // configure transformation matrices
-        mat4 projection = perspective(radians(45.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 1000.0f);
-        mat4 view = camera.GetViewMatrix();;
-
-        shader0.use();
-        shader0.setMat4("projection", projection);
-        shader0.setMat4("view", view);
-        // draw planet
-        mat4 model = mat4(1.0f);
-        model = translate(model, vec3(0.0f, -3.0f, 0.0f));
-        model = scale(model, 5.0f*vec3(4.0f, 4.0f, 4.0f));
-        shader0.setMat4("model", model);
-        planet.Draw(shader0);
-
-        // draw meteorites
-        /*for (unsigned int i = 0; i < amount; i++)
-        {
-            shader.setMat4("model", modelMatrices[i]);
-            rock.Draw(shader);
-        }*/
-        shader.use();
-        shader.setMat4("projection", projection);
-        shader.setMat4("view", view);
-        for (unsigned int i = 0; i < rock.meshes.size(); i++)
-        {
-            glBindVertexArray(rock.meshes[i].VAO);
-            glDrawElementsInstanced(GL_TRIANGLES, rock.meshes[i].indices.size(), GL_UNSIGNED_INT, 0, amount);
-        }
-
+        glBindVertexArray(cubeVAO);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+        glBindVertexArray(0);
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
         glfwSwapBuffers(window);

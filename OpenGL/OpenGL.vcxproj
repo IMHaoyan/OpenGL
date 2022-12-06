@@ -151,6 +151,8 @@
     <None Include="5.1.framebuffers_screen.vs" />
     <None Include="9.2.geometry_shader.frag" />
     <None Include="9.2.geometry_shader.vert" />
+    <None Include="advanced.frag" />
+    <None Include="advanced.vert" />
     <None Include="instance.frag" />
     <None Include="instance.vert" />
     <None Include="instancing.vert" />

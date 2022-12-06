@@ -103,6 +103,12 @@
     <None Include="instancing.vert">
       <Filter>shader</Filter>
     </None>
+    <None Include="advanced.vert">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="advanced.frag">
+      <Filter>shader</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Image Include="container.jpg">
