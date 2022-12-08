@@ -109,6 +109,12 @@
     <None Include="advanced.frag">
       <Filter>shader</Filter>
     </None>
+    <None Include="1.advanced_lighting.vert">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="1.advanced_lighting.frag">
+      <Filter>shader</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Image Include="container.jpg">
@@ -133,6 +139,9 @@
       <Filter>资源文件</Filter>
     </Image>
     <Image Include="skybox\right.jpg">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="wood.png">
       <Filter>资源文件</Filter>
     </Image>
   </ItemGroup>
