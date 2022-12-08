@@ -18,7 +18,7 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void processInput(GLFWwindow* window);
 unsigned int loadTexture(char const* path);
-unsigned int loadCubemap(vector<std::string> faces);
+unsigned int loadCubemap(vector<string> faces);
 // settings
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
@@ -67,10 +67,6 @@ int main()
         return -1;
     }
 
-    glEnable(GL_DEPTH_TEST);
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
     // build and compile shaders
     // -------------------------
     Shader shader("1.advanced_lighting.vert", "1.advanced_lighting.frag");
@@ -113,20 +109,18 @@ int main()
 
     // lighting info
     // -------------
-    glm::vec3 lightPos(0.0f, 0.0f, 0.0f);
+    vec3 lightPos(0.0f, 0.0f, 0.0f);
 
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     // render loop
     // -----------
     while (!glfwWindowShouldClose(window))
     {
-        // per-frame time logic
-        // --------------------
         float currentFrame = static_cast<float>(glfwGetTime());
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
-
-        // input
-        // -----
         processInput(window);
 
         // render
@@ -136,11 +130,10 @@ int main()
 
         // draw objects
         shader.use();
-        glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-        glm::mat4 view = camera.GetViewMatrix();
+        mat4 projection = perspective(radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+        mat4 view = camera.GetViewMatrix();
         shader.setMat4("projection", projection);
         shader.setMat4("view", view);
-        // set light uniforms
         shader.setVec3("viewPos", camera.Position);
         shader.setVec3("lightPos", lightPos);
         shader.setInt("blinn", blinn);
@@ -150,7 +143,7 @@ int main()
         glBindTexture(GL_TEXTURE_2D, floorTexture);
         glDrawArrays(GL_TRIANGLES, 0, 6);
 
-        std::cout << (blinn ? "Blinn-Phong" : "Phong") << std::endl;
+        cout << (blinn ? "Blinn-Phong" : "Phong") << endl;
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
         glfwSwapBuffers(window);
@@ -200,7 +193,6 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
     // height will be significantly larger than specified on retina displays.
     glViewport(0, 0, width, height);
 }
-
 
 // glfw: whenever the mouse moves, this callback is called
 // -------------------------------------------------------
@@ -260,12 +252,12 @@ unsigned int loadTexture(char const* path)
         stbi_image_free(data);
     }
     else {
-        cout << "Texture failed to load at path: " << path << std::endl;
+        cout << "Texture failed to load at path: " << path << endl;
         stbi_image_free(data);
     }
     return textureID;
 }
-unsigned int loadCubemap(vector<std::string> faces)
+unsigned int loadCubemap(vector<string> faces)
 {
     unsigned int textureID;
     glGenTextures(1, &textureID);
@@ -284,7 +276,7 @@ unsigned int loadCubemap(vector<std::string> faces)
         }
         else
         {
-            cout << "Cubemap texture failed to load at path: " << faces[i] << std::endl;
+            cout << "Cubemap texture failed to load at path: " << faces[i] << endl;
             stbi_image_free(data);
         }
     }
