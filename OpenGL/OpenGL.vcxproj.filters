@@ -115,6 +115,24 @@
     <None Include="1.advanced_lighting.frag">
       <Filter>shader</Filter>
     </None>
+    <None Include="sm.vert">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="sm.frag">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="main.frag">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="main.vert">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="debug.vert">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="debug.frag">
+      <Filter>shader</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Image Include="container.jpg">

@@ -147,6 +147,8 @@
     <None Include="1.advanced_lighting.vert" />
     <None Include="10.2.instancing.frag" />
     <None Include="10.2.instancing.vert" />
+    <None Include="sm.frag" />
+    <None Include="sm.vert" />
     <None Include="5.1.framebuffers.fs" />
     <None Include="5.1.framebuffers.vs" />
     <None Include="5.1.framebuffers_screen.fs" />
@@ -159,6 +161,8 @@
     <None Include="instance.vert" />
     <None Include="instancing.vert" />
     <None Include="model.frag" />
+    <None Include="main.frag" />
+    <None Include="main.vert" />
     <None Include="reflect.frag" />
     <None Include="reflect.vert" />
     <None Include="refract.frag" />
@@ -167,8 +171,10 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </None>
     <None Include="shader.vert" />
+    <None Include="debug.vert" />
     <None Include="skyBox.frag" />
     <None Include="skyBox.vert" />
+    <None Include="debug.frag" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="container.jpg" />
